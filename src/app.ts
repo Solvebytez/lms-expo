@@ -8,7 +8,7 @@ import { generateToken } from './utils/generateToken';
 import { isAuthenticated } from './middleware/isAuthenticated';
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 app.use(express.json());
 
@@ -17,7 +17,6 @@ interface LoginRequestBody {
 }
 
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -33,10 +32,10 @@ export interface DecodedToken {
     '/login',
     async (req: Request<{}, {}, LoginRequestBody>, res: Response, next: NextFunction):Promise<any> => {
       try {
-        const { signInTokn } = req.body;
+        const { signInTokn } = req.body || {};
 
         
-        if (!signInTokn) {
+        if (!req.body || !req.body.signInTokn) {
           return res.status(400).json({ message: 'signInTokn is required', success: false, });
         }
   
@@ -164,6 +163,6 @@ export interface DecodedToken {
   app.use('/api', router);
 
 
-app.listen(4000, () => {
+app.listen(PORT, () => {
   console.log("Server is running on port 4000");
 });
